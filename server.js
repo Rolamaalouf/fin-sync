@@ -1,7 +1,7 @@
 // server.js
+const dotenv = require('dotenv');
 const express = require('express');
 const cors = require('cors');
-const dotenv = require('dotenv');
 const supabase = require('./db');  // Import the supabase client
 
 dotenv.config(); // Load environment variables

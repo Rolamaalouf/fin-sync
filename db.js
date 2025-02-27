@@ -1,15 +1,25 @@
-// db.js
 const { createClient } = require('@supabase/supabase-js');
-const dotenv = require('dotenv');
+const { Client } = require('pg');  // You can also use pg module directly for PostgreSQL connections
 
-// Load environment variables from .env file
+const dotenv = require('dotenv');
 dotenv.config();
 
-// Get Supabase URL and API key from the environment variables
+// If you want to use the Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
-
-// Initialize Supabase client
 const supabase = createClient(supabaseUrl, supabaseKey);
 
-module.exports = supabase;
+// If you're connecting directly via PostgreSQL (using pg)
+const pgClient = new Client({
+  connectionString: process.env.DATABASE_URL,  // Your connection string goes here
+});
+
+pgClient.connect()
+  .then(() => {
+    console.log('Successfully connected to PostgreSQL!');
+  })
+  .catch(err => {
+    console.error('Error connecting to PostgreSQL:', err);
+  });
+
+module.exports = { supabase, pgClient };
