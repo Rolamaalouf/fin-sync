@@ -1,43 +1,23 @@
-const { supabase } = require('../db'); // Ensure this imports your Supabase client
+const { supabase } = require('../db').supabase;
 
 class ProfitGoal {
-  constructor(amount, targetDate, adminId) {
-    this.amount = amount;
-    this.targetDate = targetDate;
-    this.adminId = adminId; // ID of the admin creating the profit goal
+  constructor(targetProfit, startDate, endDate) {
+    this.targetProfit = targetProfit;
+    this.startDate = startDate;
+    this.endDate = endDate;
   }
 
-  // Method to save the profit goal to the database
   async save() {
     const { data, error } = await supabase
-      .from('profit_goals') // Ensure this matches your table name
-      .insert([{ 
-        amount: this.amount, 
-        target_date: this.targetDate, // Use the correct column name in the database
-        admin_id: this.adminId // Ensure this matches your database schema
-      }]);
-
-    if (error) throw error;
-    return data;
-  }
-
-  // Static method to fetch all profit goals
-  static async getAllProfitGoals() {
-    const { data, error } = await supabase
       .from('profit_goals')
-      .select('*');
-
-    if (error) throw error;
-    return data;
-  }
-
-  // Static method to fetch a specific profit goal by ID
-  static async getProfitGoalById(id) {
-    const { data, error } = await supabase
-      .from('profit_goals')
-      .select('*')
-      .eq('id', id)
-      .single();
+      .insert([
+        {
+          target_profit: this.targetProfit,
+          start_date: this.startDate,
+          end_date: this.endDate,
+          created_by: this.createdBy, 
+        },
+      ]);
 
     if (error) throw error;
     return data;
