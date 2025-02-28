@@ -15,7 +15,7 @@ class RecurringIncome {
   // Method to save the recurring income to the database
   async save() {
     const { data, error } = await supabase
-      .from('recurring_incomes') // Ensure this matches your table name
+      .from('recurringIncome') // Ensure this matches your table name
       .insert([{ 
         title: this.title, 
         description: this.description, 
@@ -34,7 +34,7 @@ class RecurringIncome {
   // Static method to fetch all recurring incomes
   static async getAllRecurringIncomes() {
     const { data, error } = await supabase
-      .from('recurring_incomes')
+      .from('recurringIncome')
       .select('*');
 
     if (error) throw error;
@@ -44,7 +44,7 @@ class RecurringIncome {
   // Static method to fetch a specific recurring income by ID
   static async getRecurringIncomeById(id) {
     const { data, error } = await supabase
-      .from('recurring_incomes')
+      .from('recurringIncome')
       .select('*')
       .eq('id', id)
       .single();

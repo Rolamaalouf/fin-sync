@@ -6,7 +6,7 @@ const createRecurringIncome = async (req, res) => {
     const { title, description, amount, currency, startDate, endDate, categoryId } = req.body;
     const income = new RecurringIncome(title, description, amount, currency, startDate, endDate, categoryId);
     const { data, error } = await supabase
-      .from('recurring_incomes')
+      .from('recurringIncome')
       .insert([{ title: income.title, description: income.description, amount: income.amount, currency: income.currency, startDate: income.startDate, endDate: income.endDate, categoryId: income.categoryId }]);
 
     if (error) throw error;

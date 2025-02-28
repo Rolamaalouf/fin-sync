@@ -15,7 +15,7 @@ class RecurringExpense {
   // Method to save the recurring expense to the database
   async save() {
     const { data, error } = await supabase
-      .from('recurring_expenses') // Ensure this matches your table name
+      .from('recurringExpense') // Ensure this matches your table name
       .insert([{ 
         title: this.title, 
         description: this.description, 
@@ -34,7 +34,7 @@ class RecurringExpense {
   // Static method to fetch all recurring expenses
   static async getAllRecurringExpenses() {
     const { data, error } = await supabase
-      .from('recurring_expenses')
+      .from('recurringExpense')
       .select('*');
 
     if (error) throw error;
@@ -44,7 +44,7 @@ class RecurringExpense {
   // Static method to fetch a specific recurring expense by ID
   static async getRecurringExpenseById(id) {
     const { data, error } = await supabase
-      .from('recurring_expenses')
+      .from('recurringExpense')
       .select('*')
       .eq('id', id)
       .single();
