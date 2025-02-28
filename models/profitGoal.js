@@ -17,38 +17,29 @@ class ProfitGoal {
         admin_id: this.adminId // Ensure this matches your database schema
       }]);
 
-    if (error) {
-      console.error('Error inserting data:', error);
-      throw error;
-    }
+    if (error) throw error;
     return data;
   }
 
   // Static method to fetch all profit goals
   static async getAllProfitGoals() {
     const { data, error } = await supabase
-      .from('profit_goals') // Ensure this matches your table name
+      .from('profit_goals')
       .select('*');
 
-    if (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
+    if (error) throw error;
     return data;
   }
 
   // Static method to fetch a specific profit goal by ID
   static async getProfitGoalById(id) {
     const { data, error } = await supabase
-      .from('profit_goals') // Ensure this matches your table name
+      .from('profit_goals')
       .select('*')
       .eq('id', id)
       .single();
 
-    if (error) {
-      console.error('Error fetching data:', error);
-      throw error;
-    }
+    if (error) throw error;
     return data;
   }
 }
