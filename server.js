@@ -1,9 +1,6 @@
-const dotenv = require('dotenv');
-dotenv.config(); // Load environment variables
-
 const express = require('express');
 const cors = require('cors');
-const supabase = require('./db');  // Import the supabase client
+const supabase = require('./db');  
 const adminRoutes = require('./routes/adminRoutes');
 const categoryRoutes = require('./routes/categoryRoutes');
 const fixedIncomeRoutes = require('./routes/fixedIncomeRoutes');
@@ -27,19 +24,21 @@ app.get('/', (req, res) => {
 
 // Example route to fetch data from Supabase
 app.get('/get-users', async (req, res) => {
-  const { data, error } = await supabase
-    .from('users') // Replace 'users' with your table name
-    .select('*');
+  try {
+    const { data, error } = await supabase.from('users').select('*');
 
-  if (error) {
-    return res.status(500).json({ error: error.message });
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.json(data);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
   }
-
-  res.json(data);
 });
 
 // Use routes with middleware
-app.use('/api/admins', requireAuth, requireSuperAdmin, adminRoutes);
+app.use('/api/admins', adminRoutes); // Notice: No middleware applied here
 app.use('/api/categories', requireAuth, categoryRoutes);
 app.use('/api/fixed-incomes', requireAuth, fixedIncomeRoutes);
 app.use('/api/fixed-expenses', requireAuth, fixedExpenseRoutes);

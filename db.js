@@ -9,6 +9,11 @@ const supabaseUrl = process.env.SUPABASE_URL;
 const supabaseKey = process.env.SUPABASE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
+if (!supabaseUrl || !supabaseKey) {
+  console.error("Supabase URL or Key is missing! Check your .env file.");
+  process.exit(1);
+}
+
 // If you're connecting directly via PostgreSQL (using pg)
 const pgClient = new Client({
   connectionString: process.env.DATABASE_URL,  // Your connection string goes here
