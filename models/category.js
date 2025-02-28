@@ -28,17 +28,24 @@ class Category {
 
   // Static method to fetch a specific category by ID
   static async getCategoryById(id) {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .eq('id', id)
-      .single();
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('id', id)
+        .limit(1);
 
-    if (error) throw error;
-    return data;
+      if (error) throw error;
+
+      if (data.length === 0) {
+        throw new Error('Category not found.');
+      }
+
+      return data[0];
+    } catch (error) {
+      throw error;
+    }
   }
-
-
 }
 
 module.exports = Category;
