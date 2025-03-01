@@ -33,6 +33,22 @@ const createCategory = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const getCategory = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('categories')
+      .select('*');
 
-module.exports = { createCategory };
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+
+module.exports = { createCategory , getCategory };
 

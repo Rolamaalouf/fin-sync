@@ -6,10 +6,10 @@ dotenv.config();
 
 // If you want to use the Supabase client
 const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
+const supabase = createClient (supabaseUrl, supabaseSecretKey);
 
-if (!supabaseUrl || !supabaseKey) {
+if (!supabaseUrl || !supabaseSecretKey) {
   console.error("Supabase URL or Key is missing! Check your .env file.");
   process.exit(1);
 }

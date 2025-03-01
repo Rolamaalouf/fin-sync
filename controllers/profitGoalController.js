@@ -1,32 +1,19 @@
 const { supabase } = require('../db');
-const { requireAuth, requireSuperAdmin } = require('../utils/auth');
 
-const createProfitGoal = async (req, res) => {
-  try {
-    const { targetProfit, startDate, endDate } = req.body;
+exports.createProfitGoal = async (req, res) => {
+  const { goalAmount, description } = req.body;
 
-    // Insert new profit goal into the database
-    const { data, error } = await supabase
-      .from('profit-goals')
-      .insert([
-        {
-          target_profit: targetProfit,
-          start_date: startDate,
-          end_date: endDate,
-          created_by: req.user.id, // Store the ID of the super admin who created the goal
-        },
-      ]);
+  const { data, error } = await supabase.from('profit_goals').insert([
+    { goalAmount, description, createdBy: req.user.id }
+  ]);
 
-    if (error) {
-      console.error('Error creating profit goal:', error); // Log the error for inspection
-      throw error;
-    }
-
-    res.status(201).json({ message: 'Profit goal created successfully.', data });
-  } catch (error) {
-    console.error('Error creating profit goal:', error); // Log the error for inspection
-    res.status(500).json({ error: error.message });
-  }
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(201).json({ message: 'Profit goal created successfully', data });
 };
 
-module.exports = { createProfitGoal };
+exports.getProfitGoals = async (req, res) => {
+  const { data, error } = await supabase.from('profit_goals').select('*');
+
+  if (error) return res.status(400).json({ error: error.message });
+  res.status(200).json(data);
+};
