@@ -40,7 +40,7 @@ app.get('/get-users', async (req, res) => {
 // Use routes with middleware
 app.use('/api/admins', adminRoutes); // Notice: No middleware applied here
 app.use('/api/categories', categoryRoutes);
-app.use('/api/fixed-incomes', fixedIncomeRoutes);
+app.use('/api/fixed-income', fixedIncomeRoutes);
 app.use('/api/fixed-expenses',  fixedExpenseRoutes);
 app.use('/api/recurring-incomes', recurringIncomeRoutes);
 app.use('/api/recurring-expenses', recurringExpenseRoutes);

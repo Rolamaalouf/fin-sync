@@ -9,7 +9,7 @@ class ProfitGoal {
 
   async save() {
     const { data, error } = await supabase
-      .from('profit_goals')
+      .from('profit-goals')
       .insert([
         {
           target_profit: this.targetProfit,

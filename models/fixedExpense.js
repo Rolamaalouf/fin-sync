@@ -1,4 +1,4 @@
-const { supabase } = require('../db'); // Ensure this imports your Supabase client
+const { supabase } = require('../db').supabase;
 
 class FixedExpense {
   constructor(title, description, amount, currency, date, categoryId, adminId) {
@@ -14,16 +14,18 @@ class FixedExpense {
   // Method to save the fixed expense to the database
   async save() {
     const { data, error } = await supabase
-      .from('fixed_expenses') // Ensure this matches your table name
-      .insert([{ 
-        title: this.title, 
-        description: this.description, 
-        amount: this.amount, 
-        currency: this.currency, 
-        date: this.date, 
-        category_id: this.categoryId, // Use the correct column name in the database
-        admin_id: this.adminId // Ensure this matches your database schema
-      }]);
+      .from('fixed-expenses') // Ensure this matches your table name
+      .insert([
+        {
+          title: this.title,
+          description: this.description,
+          amount: this.amount,
+          currency: this.currency,
+          date: this.date,
+          category_id: this.categoryId, // Use the correct column name in the database
+          admin_id: this.adminId // Ensure this matches your database schema
+        }
+      ]);
 
     if (error) throw error;
     return data;
@@ -32,7 +34,7 @@ class FixedExpense {
   // Static method to fetch all fixed expenses
   static async getAllFixedExpenses() {
     const { data, error } = await supabase
-      .from('fixed_expenses')
+      .from('fixed-expenses')
       .select('*');
 
     if (error) throw error;
@@ -42,7 +44,7 @@ class FixedExpense {
   // Static method to fetch a specific fixed expense by ID
   static async getFixedExpenseById(id) {
     const { data, error } = await supabase
-      .from('fixed_expenses')
+      .from('fixed-expenses')
       .select('*')
       .eq('id', id)
       .single();

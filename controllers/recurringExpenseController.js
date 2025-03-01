@@ -6,7 +6,7 @@ const createRecurringExpense = async (req, res) => {
     const { title, description, amount, currency, startDate, endDate, categoryId } = req.body;
     const expense = new RecurringExpense(title, description, amount, currency, startDate, endDate, categoryId);
     const { data, error } = await supabase
-      .from('recurring_expenses')
+      .from('recurringExpense')
       .insert([{ title: expense.title, description: expense.description, amount: expense.amount, currency: expense.currency, startDate: expense.startDate, endDate: expense.endDate, categoryId: expense.categoryId }]);
 
     if (error) throw error;

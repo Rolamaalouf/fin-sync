@@ -7,7 +7,7 @@ const createProfitGoal = async (req, res) => {
 
     // Insert new profit goal into the database
     const { data, error } = await supabase
-      .from('profit_goals')
+      .from('profit-goals')
       .insert([
         {
           target_profit: targetProfit,
