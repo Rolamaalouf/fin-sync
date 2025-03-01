@@ -62,14 +62,50 @@ const signInUser = async (req, res) => {
       return res.status(500).json({ error: "Session data is missing." });
     }
 
+    // Make sure user exists before calling user properties
+    if (!data.user) {
+      return res.status(500).json({ error: "User data is missing." });
+    }
+
+    const userId = data.user.id; // Get user ID
+
+    // Fetch user role from the 'users' table
+    const { data: userData, error: roleError } = await supabase
+      .from('users')
+      .select('role, email, id') // make sure you select fields
+      .eq('id', userId)
+      .single();
+
+    if (roleError) {
+      console.error('Error fetching user role:', roleError);  // Log the actual error
+      return res.status(500).json({ error: 'Error fetching user role.' });
+    }
+
+    if (!userData) {
+      return res.status(404).json({ error: "User role not found in database." });
+    }
+
+    // Attach the correct role to the session
+    data.user.role = userData.role;
+
+    // Log the user data and session to help with debugging
+    console.log("Data User: ", data.user);
+    console.log("userData: ", userData);
+    console.log("email", email);
+
+    // Add role to the response object
     return res.status(200).json({
       message: 'Sign in successful',
       user: data.user,
       access_token: data.session.access_token,  // Corrected token access
+      role: userData.role,  // Include the role in the response
     });
   } catch (err) {
+    console.error('Unexpected error:', err); // Log unexpected errors for debugging
     return res.status(500).json({ error: err.message });
   }
 };
 
 module.exports = { createSuperAdmin, signInUser };
+
+

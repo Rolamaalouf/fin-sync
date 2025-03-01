@@ -21,4 +21,4 @@ pgClient.connect()
   .then(() => console.log('✅ Successfully connected to PostgreSQL!'))
   .catch(err => console.error('❌ Error connecting to PostgreSQL:', err));
 
-module.exports = { supabase, pgClient };
+module.exports = { supabase };

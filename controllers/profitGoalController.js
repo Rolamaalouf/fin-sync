@@ -1,19 +1,43 @@
-const { supabase } = require('../db');
+const { supabase } = require('../db').supabase;
+const ProfitGoal = require('../models/profitGoal');
 
 exports.createProfitGoal = async (req, res) => {
-  const { goalAmount, description } = req.body;
+  console.log("Request Body:", req.body);  // ✅ Debugging
 
-  const { data, error } = await supabase.from('profit_goals').insert([
-    { goalAmount, description, createdBy: req.user.id }
-  ]);
+  try {
+    const { targetProfit, startDate, endDate, userId } = req.body;
 
-  if (error) return res.status(400).json({ error: error.message });
-  res.status(201).json({ message: 'Profit goal created successfully', data });
+    if (!targetProfit || !startDate || !endDate || !userId) {
+      return res.status(400).json({ error: 'All fields are required.' });
+    }
+
+    if (req.user.role !== 'superAdmin') {
+      return res.status(403).json({ error: 'Unauthorized: Only Super Admins can create profit goals.' });
+    }
+
+    const profitGoal = new ProfitGoal(targetProfit, startDate, endDate, userId);
+    const data = await profitGoal.save();
+
+    res.status(201).json({ message: 'Profit goal created successfully', data });
+  } catch (err) {
+    console.error('Error creating profit goal:', err);
+    res.status(500).json({ error: err.message });
+  }
 };
 
-exports.getProfitGoals = async (req, res) => {
-  const { data, error } = await supabase.from('profit_goals').select('*');
 
-  if (error) return res.status(400).json({ error: error.message });
-  res.status(200).json(data);
+exports.getProfitGoals = async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('profit-goals').select('*');
+
+    if (error) {
+      console.error('Error fetching profit goals:', error);
+      return res.status(400).json({ error: error.message });
+    }
+
+    res.status(200).json(data);
+  } catch (err) {
+    console.error('Unexpected Error:', err);
+    res.status(500).json({ error: err.message });
+  }
 };

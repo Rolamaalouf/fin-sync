@@ -1,7 +1,7 @@
 const { supabase } = require('../db'); // Ensure this imports your Supabase client
 
 class RecurringIncome {
-  constructor(title, description, amount, currency, startDate, endDate, categoryId, adminId) {
+  constructor(title, description, amount, currency, startDate, endDate, categoryId, adminId, userId) {
     this.title = title;
     this.description = description;
     this.amount = amount;
@@ -10,6 +10,7 @@ class RecurringIncome {
     this.endDate = endDate;
     this.categoryId = categoryId; // ID of the category
     this.adminId = adminId; // ID of the admin creating the income
+    this.userId = userId
   }
 
   // Method to save the recurring income to the database
@@ -24,7 +25,8 @@ class RecurringIncome {
         start_date: this.startDate, // Use the correct column name in the database
         end_date: this.endDate, 
         category_id: this.categoryId, // Ensure this matches your database schema
-        admin_id: this.adminId // Ensure this matches your database schema
+        admin_id: this.adminId, // Ensure this matches your database schema
+        user_id: this.userId
       }]);
 
     if (error) throw error;

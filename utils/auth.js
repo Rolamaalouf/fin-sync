@@ -1,29 +1,34 @@
-const { supabase } = require('../db').supabase
+const { supabase } = require('../db');
 
 const requireAuth = async (req, res, next) => {
   try {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) return res.status(401).json({ error: 'Unauthorized' });
+    if (!token) return res.status(401).json({ error: 'Unauthorized: No token provided' });
 
-    const { data: user, error } = await supabase.auth.getUser(token);
-    if (error || !user) return res.status(401).json({ error: 'Invalid token' });
+    // Get user from token
+    const { data, error } = await supabase.auth.getUser(token);
+    if (error || !data?.user) return res.status(401).json({ error: 'Invalid token' });
 
-    const { data: userData } = await supabase
+    const userId = data.user.id;
+
+    // Fetch user role from 'users' table
+    const { data: userData, error: roleError } = await supabase
       .from('users')
       .select('role')
-      .eq('id', user.id)
+      .eq('id', userId)
       .single();
 
-    if (!userData) return res.status(403).json({ error: 'Access denied.' });
+    if (roleError || !userData) return res.status(403).json({ error: 'Access denied: User role not found' });
 
-    req.user = { id: user.id, role: userData.role };
+    // Attach user info to request
+    req.user = { id: userId, role: userData.role };
     next();
-  } catch (error) {
-    res.status(500).json({ error: error.message });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
   }
 };
 
-const requireSuperAdmin = async (req, res, next) => {
+const requireSuperAdmin = (req, res, next) => {
   if (req.user.role !== 'superAdmin') {
     return res.status(403).json({ error: 'Only super admins can perform this action.' });
   }

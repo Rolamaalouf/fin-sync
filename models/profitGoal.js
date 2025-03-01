@@ -1,10 +1,11 @@
-const { supabase } = require('../db').supabase;
+const { supabase } = require('../db') ;
 
 class ProfitGoal {
-  constructor(targetProfit, startDate, endDate) {
+  constructor(targetProfit, startDate, endDate, userId) {
     this.targetProfit = targetProfit;
     this.startDate = startDate;
     this.endDate = endDate;
+    this.userId = userId;
   }
 
   async save() {
@@ -15,7 +16,7 @@ class ProfitGoal {
           target_profit: this.targetProfit,
           start_date: this.startDate,
           end_date: this.endDate,
-          created_by: this.createdBy, 
+          user_id : this.userId 
         },
       ]);
 
@@ -23,5 +24,6 @@ class ProfitGoal {
     return data;
   }
 }
+
 
 module.exports = ProfitGoal;
