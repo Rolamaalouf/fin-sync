@@ -1,30 +1,24 @@
 const { createClient } = require('@supabase/supabase-js');
-const { Client } = require('pg');  // You can also use pg module directly for PostgreSQL connections
+const { Client } = require('pg');
+require('dotenv').config();
 
-const dotenv = require('dotenv');
-dotenv.config();
-
-// If you want to use the Supabase client
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseSecretKey = process.env.SUPABASE_SECRET_KEY;
-const supabase = createClient (supabaseUrl, supabaseSecretKey);
-
-if (!supabaseUrl || !supabaseSecretKey) {
-  console.error("Supabase URL or Key is missing! Check your .env file.");
+// Check required environment variables
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SECRET_KEY) {
+  console.error("❌ Supabase URL or Secret Key is missing! Check your .env file.");
   process.exit(1);
 }
 
-// If you're connecting directly via PostgreSQL (using pg)
+// Supabase Client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_SECRET_KEY);
+
+// PostgreSQL Client (Direct DB Connection)
 const pgClient = new Client({
-  connectionString: process.env.DATABASE_URL,  // Your connection string goes here
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },  // Needed for secure connections on some cloud providers
 });
 
 pgClient.connect()
-  .then(() => {
-    console.log('Successfully connected to PostgreSQL!');
-  })
-  .catch(err => {
-    console.error('Error connecting to PostgreSQL:', err);
-  });
+  .then(() => console.log('✅ Successfully connected to PostgreSQL!'))
+  .catch(err => console.error('❌ Error connecting to PostgreSQL:', err));
 
 module.exports = { supabase, pgClient };

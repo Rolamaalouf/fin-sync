@@ -36,12 +36,21 @@ const createAdmin = async (req, res) => {
   }
 };
 
-const getAdmin = async (req , res) => {
-  // adminController.js
-const getAdmin = (req, res) => {
-  res.send('Admin data fetched successfully!');
+const getAdmin = async (req, res) => {
+  try {
+    const { data, error } = await supabase.from('admins').select('*');
+
+    if (error) {
+      console.error('Error fetching admins:', error);
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.json({ message: 'Admin data fetched successfully!', data });
+  } catch (error) {
+    console.error('Error fetching admins:', error);
+    res.status(500).json({ error: error.message });
+  }
 };
-}
 
 // Function to sign up an admin (admin can create themselves, no super admin needed)
 const signUpAdmin = async (req, res) => {
