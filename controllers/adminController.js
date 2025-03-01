@@ -1,5 +1,5 @@
 const bcrypt = require('bcrypt');
-const { supabase } = require('../db');
+const { supabase } = require('../db').supabase;
 const Admin = require('../models/admin');
 
 // Function to create a new admin (only accessible by super admins)
