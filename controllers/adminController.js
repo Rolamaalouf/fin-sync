@@ -36,6 +36,13 @@ const createAdmin = async (req, res) => {
   }
 };
 
+const getAdmin = async (req , res) => {
+  // adminController.js
+const getAdmin = (req, res) => {
+  res.send('Admin data fetched successfully!');
+};
+}
+
 // Function to sign up an admin (admin can create themselves, no super admin needed)
 const signUpAdmin = async (req, res) => {
   try {
@@ -167,4 +174,4 @@ const deleteAdmin = async (req, res) => {
   }
 };
 
-module.exports = { createAdmin, signUpAdmin, updateAdmin, deleteAdmin };
+module.exports = { createAdmin, signUpAdmin, updateAdmin, deleteAdmin, getAdmin};

@@ -25,4 +25,22 @@ const createFixedIncome = async (req, res) => {
   }
 };
 
-module.exports = { createFixedIncome };
+const getFixedIncome = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('fixed-income')
+      .select('*');
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+
+
+module.exports = { createFixedIncome , getFixedIncome };

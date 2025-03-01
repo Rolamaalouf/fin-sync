@@ -25,4 +25,21 @@ const createFixedExpense = async (req, res) => {
   }
 };
 
-module.exports = { createFixedExpense };
+const getFixedExpense = async (req, res) => {
+  try {
+    const { data, error } = await supabase
+      .from('fixed-expenses')
+      .select('*');
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    return res.json(data);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+
+module.exports = { createFixedExpense , getFixedExpense};
