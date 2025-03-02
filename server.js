@@ -50,13 +50,13 @@ app.post('/signin', (req, res) => {
 
 // Use routes with middleware
 app.use('/api/auth', authRoutes);
-app.use('/api/admins', adminRoutes); // Notice: No middleware applied here
+app.use('/api/admins', adminRoutes); // 
 app.use('/api/categories', categoryRoutes);
 app.use('/api/fixed-income', fixedIncomeRoutes);
 app.use('/api/fixed-expenses',  fixedExpenseRoutes);
 app.use('/api/recurring-incomes', recurringIncomeRoutes);
 app.use('/api/recurring-expenses', recurringExpenseRoutes);
-app.use('/api/profit-goals', requireAuth, requireSuperAdmin, profitGoalRoutes);
+app.use('/api/profit-goals', profitGoalRoutes);
 app.use('/api/reports', requireAuth, reportRoutes);
 
 app.listen(PORT, () => {

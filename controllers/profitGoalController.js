@@ -1,4 +1,4 @@
-const { supabase } = require('../db').supabase;
+const { supabase } = require('../db');
 const ProfitGoal = require('../models/profitGoal');
 
 exports.createProfitGoal = async (req, res) => {

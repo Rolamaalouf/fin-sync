@@ -1,27 +1,22 @@
 const { supabase } = require('../db'); // Ensure this imports your Supabase client
 
 class RecurringExpense {
-  constructor(title, description, amount, currency, startDate, endDate, categoryId, adminId, userId) {
-    this.title = title;
+  constructor(description, amount, startDate, frequency, categoryId, userId, adminId) {
     this.description = description;
     this.amount = amount;
-    this.currency = currency;
     this.startDate = startDate;
-    this.endDate = endDate;
-    this.categoryId = categoryId; // ID of the category
-    this.adminId = adminId; // ID of the admin creating the expense
+    this.frequency = frequency;
+    this.categoryId = categoryId;
     this.userId = userId;
+    this.adminId = adminId;
   }
-
   // Method to save the recurring expense to the database
   async save() {
     const { data, error } = await supabase
       .from('recurringExpense') // Ensure this matches your table name
-      .insert([{ 
-        title: this.title, 
+      .insert([{  
         description: this.description, 
         amount: this.amount, 
-        currency: this.currency, 
         start_date: this.startDate, // Use the correct column name in the database
         end_date: this.endDate, 
         category_id: this.categoryId, // Ensure this matches your database schema
