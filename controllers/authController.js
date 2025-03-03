@@ -105,7 +105,99 @@ const signInUser = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+const createAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
 
-module.exports = { createSuperAdmin, signInUser };
+    // Check if the user is a Super Admin
+    if (req.user.role !== 'superAdmin') {
+      return res.status(403).json({ error: 'Only super admins can create admins.' });
+    }
+
+    // Check if the email is already registered
+    const { data: existingUser, error: checkError } = await supabase
+      .from('users')
+      .select('email')
+      .eq('email', email)
+      .single();
+
+    if (existingUser) {
+      return res.status(400).json({ error: 'Email already in use' });
+    }
+
+    // Sign up the admin user
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: null },
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Insert Admin into the 'users' table
+    const { error: insertError } = await supabase.from('users').insert([
+      {
+        id: data.user.id,
+        name: 'Admin User',
+        email,
+        role: 'admin',
+      },
+    ]);
+
+    if (insertError) {
+      return res.status(400).json({ error: insertError.message });
+    }
+
+    return res.status(201).json({
+      message: 'Admin created successfully',
+      user: data.user,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+// Admin Signup (without Super Admin approval)
+const signupAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Sign up the admin user
+    const { data, error } = await supabase.auth.signUp({
+      email,
+      password,
+      options: { emailRedirectTo: null },
+    });
+
+    if (error) {
+      return res.status(400).json({ error: error.message });
+    }
+
+    // Insert Admin into the 'users' table
+    const { error: insertError } = await supabase.from('users').insert([
+      {
+        id: data.user.id,
+        name: 'Admin User',
+        email,
+        role: 'admin',
+      },
+    ]);
+
+    if (insertError) {
+      return res.status(400).json({ error: insertError.message });
+    }
+
+    return res.status(201).json({
+      message: 'Admin registered successfully',
+      user: data.user,
+    });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { createSuperAdmin, signInUser, createAdmin, signupAdmin };
 
 
