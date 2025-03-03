@@ -1,19 +1,55 @@
-const supabase = require('../db');
 const RecurringExpense = require('../models/recurringExpense');
 
 const createRecurringExpense = async (req, res) => {
   try {
-    const { title, description, amount, currency, startDate, endDate, categoryId, adminId, userId } = req.body;
-    const expense = new RecurringExpense(title, description, amount, currency, startDate, endDate, categoryId, userId, adminId);
-    const { data, error } = await supabase
-      .from('recurringExpense')
-      .insert([{ title: expense.title, description: expense.description, amount: expense.amount, currency: expense.currency, startDate: expense.startDate, endDate: expense.endDate, categoryId: expense.categoryId, userId: expense.use }]);
+    console.log('Received Request Body:', req.body); // Debugging log
 
-    if (error) throw error;
-    res.json(data);
+    // Extract fields exactly as named in the request
+    const { title, frequency, description, amount, currency, start, finish, category_id, user_id } = req.body;
+    const categoryId = category_id || null; // Ensure it matches DB schema
+    const userId = user_id || null; // Ensure correct format
+ 
+
+    // Validate required fields
+    if (!title || !amount || !currency || !start || !categoryId || !userId) {
+      console.error('Missing fields:', { title, amount, currency, start, categoryId, userId });
+      return res.status(400).json({ error: 'All required fields must be provided.' });
+    }
+
+    // Map user_id (from request) to userId (internal)
+    const recurringExpense = new RecurringExpense(title, frequency, description, amount, currency, start, finish, categoryId, userId);
+
+    // Save to Supabase
+    const data = await recurringExpense.save();
+
+    res.status(201).json({ message: 'Recurring expense created successfully', data });
+
   } catch (error) {
+    console.error('Error creating recurring expense:', error);
     res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { createRecurringExpense };
+const getRecurringExpenses = async (req, res) => {
+  try {
+    const data = await RecurringExpense.getAllRecurringExpenses();
+    res.json(data);
+  } catch (error) {
+    console.error('Error fetching recurring expenses:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+const getRecurringExpenseById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await RecurringExpense.getRecurringExpenseById(id);
+    if (!data) return res.status(404).json({ error: 'Recurring expense not found' });
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Error fetching recurring expense by ID:', error);
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createRecurringExpense, getRecurringExpenses, getRecurringExpenseById };

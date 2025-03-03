@@ -1,14 +1,14 @@
 const { supabase } = require('../db').supabase;
 
 class FixedExpense {
-  constructor(title, description, amount, currency, date, categoryId, adminId) {
+  constructor(title, description, amount, currency, date, categoryId, userId) {
     this.title = title;
     this.description = description;
     this.amount = amount;
     this.currency = currency;
     this.date = date;
     this.categoryId = categoryId; // ID of the category
-    this.adminId = adminId; // ID of the admin creating the expense
+    this.userId = userId; // ID of the admin creating the expense
   }
 
   // Method to save the fixed expense to the database
@@ -23,7 +23,7 @@ class FixedExpense {
           currency: this.currency,
           date: this.date,
           category_id: this.categoryId, // Use the correct column name in the database
-          admin_id: this.adminId // Ensure this matches your database schema
+          user_id: this.userId // Ensure this matches your database schema
         }
       ]);
 

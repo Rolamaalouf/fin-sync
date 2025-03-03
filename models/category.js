@@ -1,32 +1,46 @@
-const { supabase } = require('../db'); // Ensure this imports your Supabase client
+const { supabase } = require('../db');
 
 class Category {
-  constructor(name, adminId) {
+  constructor(name, userId) {
+    if (!name || !userId) {
+      throw new Error('Name and user ID are required.');
+    }
     this.name = name;
-    this.adminId = adminId; // Now correctly passed as a parameter
+    this.userId = userId;
   }
 
-  // Method to save the category to the database
   async save() {
-    const { data, error } = await supabase
-      .from('categories') // Ensure this matches your table name
-      .insert([{ name: this.name, admin_id: this.adminId }]); // Use the correct column name in the database
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .insert([{ name: this.name, user_id: this.userId }]);
 
-    if (error) throw error;
-    return data;
+      if (error) {
+        console.error('Error saving category:', error);
+        throw error;
+      }
+      return data;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Static method to fetch all categories
   static async getAllCategories() {
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*');
+    try {
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*');
 
-    if (error) throw error;
-    return data;
+      if (error) {
+        console.error('Error fetching categories:', error);
+        throw error;
+      }
+      return data;
+    } catch (error) {
+      throw error;
+    }
   }
 
-  // Static method to fetch a specific category by ID
   static async getCategoryById(id) {
     try {
       const { data, error } = await supabase
@@ -35,7 +49,10 @@ class Category {
         .eq('id', id)
         .limit(1);
 
-      if (error) throw error;
+      if (error) {
+        console.error('Error fetching category:', error);
+        throw error;
+      }
 
       if (data.length === 0) {
         throw new Error('Category not found.');
