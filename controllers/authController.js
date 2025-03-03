@@ -38,6 +38,21 @@ const createSuperAdmin = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+const signOutuser = async (req, res) => {
+  try {
+    // Call the signOut method from Supabase Auth
+    const { error: signOutError } = await supabase.auth.signOut();
+
+    if (signOutError) {
+      return res.status(400).json({ error: signOutError.message });
+    }
+
+    return res.status(200).json({ message: 'Sign out successful' });
+  } catch (err) {
+    console.error('Unexpected error during sign out:', err);
+    return res.status(500).json({ error: err.message });
+  }
+};
 
 const signInUser = async (req, res) => {
   try {
@@ -198,6 +213,6 @@ const signupAdmin = async (req, res) => {
   }
 };
 
-module.exports = { createSuperAdmin, signInUser, createAdmin, signupAdmin };
+module.exports = { createSuperAdmin, signInUser, createAdmin, signupAdmin , signOutuser};
 
 
