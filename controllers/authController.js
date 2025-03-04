@@ -212,7 +212,59 @@ const signupAdmin = async (req, res) => {
     return res.status(500).json({ error: err.message });
   }
 };
+// Get All Admins (Only for Super Admins)
+const getAllAdmins = async (req, res) => {
+  try {
+    // Ensure only super admins can access this route
+    if (req.user.role !== 'superAdmin') {
+      return res.status(403).json({ error: 'Access denied: Only super admins can view admins.' });
+    }
 
-module.exports = { createSuperAdmin, signInUser, createAdmin, signupAdmin , signOutuser};
+    // Fetch all users with role 'admin'
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, name, email, role')
+      .eq('role', 'admin');
+
+    if (error) {
+      return res.status(500).json({ error: 'Error fetching admin users' });
+    }
+
+    return res.status(200).json({ admins: data });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+// Delete Admin (Only for Super Admins)
+const deleteAdmin = async (req, res) => {
+  try {
+    const { adminId } = req.params;
+
+    // Ensure only super admins can access this route
+    if (req.user.role !== 'superAdmin') {
+      return res.status(403).json({ error: 'Access denied: Only super admins can delete admins.' });
+    }
+
+    // Delete the admin from Supabase auth
+    const { error: authError } = await supabase.auth.admin.deleteUser(adminId);
+    if (authError) {
+      return res.status(500).json({ error: 'Error deleting admin from authentication' });
+    }
+
+    // Delete the admin from the 'users' table
+    const { error } = await supabase.from('users').delete().eq('id', adminId);
+    if (error) {
+      return res.status(500).json({ error: 'Error deleting admin from database' });
+    }
+
+    return res.status(200).json({ message: 'Admin deleted successfully' });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+};
+
+
+module.exports = { createSuperAdmin, signInUser, createAdmin, signupAdmin , signOutuser, getAllAdmins, deleteAdmin};
 
 
