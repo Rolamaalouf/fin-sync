@@ -239,7 +239,7 @@ const getAllAdmins = async (req, res) => {
 // Delete Admin (Only for Super Admins)
 const deleteAdmin = async (req, res) => {
   try {
-    const { userId } = req.params;
+    const { adminId } = req.params;
 
     // Ensure only super admins can access this route
     if (req.user.role !== 'superAdmin') {
@@ -247,13 +247,13 @@ const deleteAdmin = async (req, res) => {
     }
 
     // Delete the admin from Supabase auth
-    const { error: authError } = await supabase.auth.admin.deleteUser (userId);
+    const { error: authError } = await supabase.auth.admin.deleteUser (adminId);
     if (authError) {
       return res.status(500).json({ error: 'Error deleting admin from authentication' });
     }
 
     // Delete the admin from the 'users' table
-    const { error } = await supabase.from('users').delete().eq('id', userId);
+    const { error } = await supabase.from('users').delete().eq('id', adminId);
     if (error) {
       return res.status(500).json({ error: 'Error deleting admin from database' });
     }

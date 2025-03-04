@@ -11,5 +11,4 @@ router.post('/signout' , signOutuser);
 router.get('/admins', requireSuperAdmin, getAllAdmins);
 router.delete('/admin/:adminId', requireSuperAdmin, deleteAdmin);
 
-
 module.exports = router;
