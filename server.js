@@ -17,6 +17,9 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+app.use(cors({
+  origin: 'https://fin-sync.onrender.com'  
+}));
 
 // Basic route to check server
 app.get('/', (req, res) => {
