@@ -8,8 +8,8 @@ router.post('/signin', signInUser);
 router.post('/create-admin', requireSuperAdmin, createAdmin); 
 router.post('/signup-admin', signupAdmin); // Admins can sign up without approval
 router.post('/signout' , signOutuser);
-router.get('/admins', requireAuth, requireSuperAdmin, getAllAdmins);
-router.delete('/admin/:adminId', requireAuth, requireSuperAdmin, deleteAdmin);
+router.get('/admins', requireSuperAdmin, getAllAdmins);
+router.delete('/admin/:adminId', requireSuperAdmin, deleteAdmin);
 
 
 module.exports = router;
