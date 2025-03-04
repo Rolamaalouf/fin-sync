@@ -14,7 +14,7 @@ class FixedExpense {
   // Method to save the fixed expense to the database
   async save() {
     const { data, error } = await supabase
-      .from('fixed-expenses') // Ensure this matches your table name
+      .from('fixed_expenses') // Ensure this matches your table name
       .insert([
         {
           title: this.title,
@@ -34,7 +34,7 @@ class FixedExpense {
   // Static method to fetch all fixed expenses
   static async getAllFixedExpenses() {
     const { data, error } = await supabase
-      .from('fixed-expenses')
+      .from('fixed_expenses')
       .select('*');
 
     if (error) throw error;
@@ -44,7 +44,7 @@ class FixedExpense {
   // Static method to fetch a specific fixed expense by ID
   static async getFixedExpenseById(id) {
     const { data, error } = await supabase
-      .from('fixed-expenses')
+      .from('fixed_expenses')
       .select('*')
       .eq('id', id)
       .single();

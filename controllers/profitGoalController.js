@@ -28,7 +28,7 @@ exports.createProfitGoal = async (req, res) => {
 
 exports.getProfitGoals = async (req, res) => {
   try {
-    const { data, error } = await supabase.from('profit-goals').select('*');
+    const { data, error } = await supabase.from('profit_goals').select('*');
 
     if (error) {
       console.error('Error fetching profit goals:', error);

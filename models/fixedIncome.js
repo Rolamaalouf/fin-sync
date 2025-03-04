@@ -14,7 +14,7 @@ class FixedIncome {
   // Method to save the fixed income to the database
   async save() {
     const { data, error } = await supabase
-      .from('fixed-income') // Ensure this matches your table name
+      .from('fixed_income') // Ensure this matches your table name
       .insert([{ 
         title: this.title,
         description: this.description,
@@ -32,7 +32,7 @@ class FixedIncome {
   // Static method to fetch all fixed incomes
   static async getAllFixedIncomes() {
     const { data, error } = await supabase
-      .from('fixed-income')
+      .from('fixed_income')
       .select('*');
 
     if (error) throw error;
@@ -42,7 +42,7 @@ class FixedIncome {
   // Static method to fetch a specific fixed income by ID
   static async getFixedIncomeById(id) {
     const { data, error } = await supabase
-      .from('fixed-income')
+      .from('fixed_income')
       .select('*')
       .eq('id', id)
       .single();
