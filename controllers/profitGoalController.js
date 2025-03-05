@@ -2,7 +2,8 @@ const { supabase } = require('../db');
 const ProfitGoal = require('../models/profitGoal');
 
 exports.createProfitGoal = async (req, res) => {
-  console.log("Request Body:", req.body);  // ✅ Debugging
+  console.log("Request Body:", req.body);  // ✅ Debugging request body
+  console.log("User Info:", req.user);  // ✅ Debugging user info
 
   try {
     const { targetProfit, startDate, endDate, userId } = req.body;
@@ -11,7 +12,8 @@ exports.createProfitGoal = async (req, res) => {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
-    if (req.user.role !== 'superAdmin') {
+    // Ensure req.user is defined
+    if (!req.user || req.user.role !== 'superAdmin') {
       return res.status(403).json({ error: 'Unauthorized: Only Super Admins can create profit goals.' });
     }
 
@@ -24,7 +26,6 @@ exports.createProfitGoal = async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 };
-
 
 exports.getProfitGoals = async (req, res) => {
   try {
