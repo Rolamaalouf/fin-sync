@@ -38,8 +38,8 @@ app.get('/get-users', async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 });
-// To this
-app.post('/api/auth/signin', (req, res) => {
+
+app.post('/signin', (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
