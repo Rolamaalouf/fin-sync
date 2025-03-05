@@ -37,7 +37,7 @@ module.exports = { createFixedIncome };
 const getFixedIncome = async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('fixed-income')
+      .from('fixed_income')
       .select('*');
 
     if (error) {

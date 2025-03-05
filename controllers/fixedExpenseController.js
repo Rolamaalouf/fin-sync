@@ -19,7 +19,7 @@ const createFixedExpense = async (req, res) => {
 
     const expense = new FixedExpense(title, description, amount, currency, date, categoryId, userId);
     const { data, error } = await supabase
-      .from('fixed-expenses')
+      .from('fixed_expenses')
       .insert([
         {
           title: expense.title,
@@ -47,7 +47,7 @@ const createFixedExpense = async (req, res) => {
 const getFixedExpense = async (req, res) => {
   try {
     const { data, error } = await supabase
-      .from('fixed-expenses')
+      .from('fixed_expenses')
       .select('*');
 
     if (error) {
