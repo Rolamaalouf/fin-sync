@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const { createRecurringIncome } = require('../controllers/recurringIncomeController');
-const { getAllRecurringIncome } = require('../models/recurringIncome');
+const {  createRecurringIncome, getRecurringIncome, getRecurringIncomeById} = require('../controllers/recurringIncomeController');
 
 router.post('/', createRecurringIncome);
-router.get('/', getAllRecurringIncome);
+router.get('/', getRecurringIncome);
+router.get('/:id',  getRecurringIncomeById)
 
 module.exports = router;
