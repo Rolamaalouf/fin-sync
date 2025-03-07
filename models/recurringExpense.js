@@ -1,7 +1,7 @@
 const { supabase } = require('../db');
 
 class RecurringExpense {
-  constructor(title, frequency, description, amount, currency, start, finish, categoryId, userId) {
+  constructor(title = '', frequency = '', description = '', amount = 0, currency = '', start = '', finish = '', categoryId = null, userId = null) {
     this.title = title;
     this.frequency = frequency;
     this.description = description;
@@ -15,7 +15,7 @@ class RecurringExpense {
 
   async save() {
     const { data, error } = await supabase
-      .from('recurrentExpense')
+      .from('recurrentExpense') // Corrected table name
       .insert([
         {
           title: this.title,
@@ -44,6 +44,26 @@ class RecurringExpense {
     const { data, error } = await supabase.from('recurrentExpense').select('*').eq('id', id).single();
     if (error) throw error;
     return data;
+  }
+
+  static async update(id, data) {
+    const { error } = await supabase
+      .from('recurrentExpense')
+      .update(data)
+      .eq('id', id);
+
+    if (error) throw error;
+    return await RecurringExpense.getRecurringExpenseById(id);
+  }
+
+  static async delete(id) {
+    const { data, error } = await supabase
+      .from('recurrentExpense')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return data.length > 0; // Returns true if deleted, false otherwise
   }
 }
 

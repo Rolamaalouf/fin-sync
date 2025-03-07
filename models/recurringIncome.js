@@ -45,6 +45,17 @@ class RecurringIncome {
     if (error) throw error;
     return data;
   }
+
+  // New delete method to remove a record
+  static async delete(id) {
+    const { data, error } = await supabase
+      .from('recurrentIncome')
+      .delete()
+      .eq('id', id);
+
+    if (error) throw error;
+    return data;
+  }
 }
 
 module.exports = RecurringIncome;
