@@ -51,5 +51,34 @@ const getRecurringIncomeById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const updateRecurringIncome = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, frequency, description, amount, currency, start, finish, category_id, user_id } = req.body;
 
-module.exports = { createRecurringIncome, getRecurringIncome, getRecurringIncomeById };
+    const updatedIncome = await RecurringIncome.update(id, { title, frequency, description, amount, currency, start, finish, category_id, user_id });
+
+    if (!updatedIncome) return res.status(404).json({ error: 'Recurring income not found' });
+
+    res.status(200).json({ message: 'Recurring income updated successfully', data: updatedIncome });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete RecurringIncome
+const deleteRecurringIncome = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedIncome = await RecurringIncome.delete(id);
+
+    if (!deletedIncome) return res.status(404).json({ error: 'Recurring income not found' });
+
+    res.status(200).json({ message: 'Recurring income deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createRecurringIncome, getRecurringIncome, getRecurringIncomeById, updateRecurringIncome, deleteRecurringIncome };

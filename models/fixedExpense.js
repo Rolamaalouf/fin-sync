@@ -1,7 +1,7 @@
 const { supabase } = require('../db').supabase;
 
 class FixedExpense {
-  constructor(title, description, amount, currency, date, categoryId, userId) {
+  constructor(title = '', description = '', amount = 0, currency = '', date = '', categoryId = null, userId = null) {
     this.title = title;
     this.description = description;
     this.amount = amount;
@@ -51,6 +51,17 @@ class FixedExpense {
 
     if (error) throw error;
     return data;
+  }
+
+  // Method to update a fixed expense in the database
+  static async updateFixedExpense(id, data) {
+    const { error } = await supabase
+      .from('fixed_expenses')
+      .update(data)
+      .eq('id', id);
+
+    if (error) throw error;
+    return await FixedExpense.getFixedExpenseById(id);
   }
 }
 

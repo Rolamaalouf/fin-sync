@@ -41,4 +41,40 @@ exports.getProfitGoals = async (req, res) => {
     console.error('Unexpected Error:', err);
     res.status(500).json({ error: err.message });
   }
+  
 };
+exports.deleteProfitGoal = async (req, res) => {
+  try {
+    const { id } = req.params;
+    console.log("Delete Request Received. Profit Goal ID:", id);
+
+    if (!id) {
+      return res.status(400).json({ error: 'Profit goal ID is required.' });
+    }
+
+    // Ensure the user is authorized
+    if (!req.user || req.user.role !== 'superAdmin') {
+      return res.status(403).json({ error: 'Unauthorized: Only Super Admins can delete profit goals.' });
+    }
+
+    const profitGoalId = String(id).trim();
+
+    const { data, error } = await supabase
+      .from('profit_goals')
+      .delete()
+      .eq('id', profitGoalId);
+
+    if (error) {
+      console.error('Error deleting profit goal:', error);
+      return res.status(400).json({ error: error.message });
+    }
+
+    console.log('Profit goal deleted successfully:', data);
+    res.status(200).json({ message: 'Profit goal deleted successfully', data });
+  } catch (err) {
+    console.error('Unexpected Error:', err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
+

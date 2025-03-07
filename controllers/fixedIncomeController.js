@@ -50,6 +50,44 @@ const getFixedIncome = async (req, res) => {
   }
 };
 
+const updateFixedIncome = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, description, amount, currency, date, category_id, user_id } = req.body;
 
+    const { data, error } = await supabase
+      .from('fixed_income')
+      .update({ title, description, amount, currency, date, category_id, user_id })
+      .eq('id', id);
 
-module.exports = { createFixedIncome , getFixedIncome };
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.status(200).json({ message: 'Fixed income updated successfully', data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Delete FixedIncome
+const deleteFixedIncome = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const { data, error } = await supabase
+      .from('fixed_income')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      return res.status(500).json({ error: error.message });
+    }
+
+    res.status(200).json({ message: 'Fixed income deleted successfully', data });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+module.exports = { createFixedIncome, getFixedIncome, updateFixedIncome, deleteFixedIncome };

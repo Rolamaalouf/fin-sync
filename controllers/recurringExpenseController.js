@@ -51,5 +51,34 @@ const getRecurringExpenseById = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+const updateRecurringExpense = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { title, frequency, description, amount, currency, start, finish, category_id, user_id } = req.body;
 
-module.exports = { createRecurringExpense, getRecurringExpenses, getRecurringExpenseById };
+    const updatedExpense = await RecurringExpense.update(id, { title, frequency, description, amount, currency, start, finish, category_id, user_id });
+
+    if (!updatedExpense) return res.status(404).json({ error: 'Recurring expense not found' });
+
+    res.status(200).json({ message: 'Recurring expense updated successfully', data: updatedExpense });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+// Delete RecurringExpense
+const deleteRecurringExpense = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const deletedExpense = await RecurringExpense.delete(id);
+
+    if (!deletedExpense) return res.status(404).json({ error: 'Recurring expense not found' });
+
+    res.status(200).json({ message: 'Recurring expense deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = { createRecurringExpense, getRecurringExpenses, getRecurringExpenseById, updateRecurringExpense, deleteRecurringExpense };
