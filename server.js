@@ -58,7 +58,7 @@ app.use('/api/fixed-expenses',  fixedExpenseRoutes);
 app.use('/api/recurring-incomes', recurringIncomeRoutes);
 app.use('/api/recurring-expenses', recurringExpenseRoutes);
 app.use('/api/profit-goals', profitGoalRoutes);
-app.use('/api/reports', requireAuth, reportRoutes);
+app.use('/api/reports', reportRoutes);
 
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);

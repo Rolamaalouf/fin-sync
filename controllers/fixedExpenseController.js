@@ -57,26 +57,24 @@ const getFixedExpense = async (req, res) => {
 
 const deleteFixedExpense = async (req, res) => {
   try {
-    const { id } = req.params;  // The ID of the fixed expense to be deleted
+    const { id } = req.params;
 
-    // Ensure the ID is valid
     if (!id) {
       return res.status(400).json({ error: 'Expense ID is required' });
     }
 
-    // Delete from the database
     const { data, error } = await supabase
       .from('fixed_expenses')
       .delete()
-      .eq('id', id); // Match the record with the given ID
+      .eq('id', id);
 
     if (error) {
       console.error('Error deleting fixed expense:', error);
       return res.status(500).json({ error: error.message });
     }
 
-    // Check if any data was deleted
-    if (!data || data.length === 0) {
+    // Modified check to handle null/undefined cases
+    if (!data?.length) {
       return res.status(404).json({ error: 'Fixed expense not found' });
     }
 
@@ -86,6 +84,7 @@ const deleteFixedExpense = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
 
 const updateFixedExpense = async (req, res) => {
   try {
