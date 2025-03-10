@@ -6,6 +6,6 @@ const { createFixedExpense, getFixedExpense, deleteFixedExpense, updateFixedExpe
 router.post('/', createFixedExpense);
 router.get('/', getFixedExpense);
 router.delete('/:id', deleteFixedExpense);  // `id` is passed as a URL parameter
-router.put('/:id', updateFixedExpense);  // `id` is passed as a URL parameter for updating
+router.patch('/:id', updateFixedExpense);  // `id` is passed as a URL parameter for updating
 
 module.exports = router;

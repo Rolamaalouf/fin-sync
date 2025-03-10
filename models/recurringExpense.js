@@ -63,7 +63,8 @@ class RecurringExpense {
       .eq('id', id);
 
     if (error) throw error;
-    return data.length > 0; // Returns true if deleted, false otherwise
+    return data ? true : false;
+
   }
 }
 
